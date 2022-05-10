@@ -77,7 +77,7 @@ describe('ActionService', () => {
   it('should create an action having currentValue between 80% and 100% of the maxValue attribute', async () => {
     expect(
       (await service.create(mockActionDTO)).currentValue,
-    ).toBeGreaterThanOrEqual(0.8 * mockActionDTO.maxValue);
+    ).toBeGreaterThanOrEqual(Math.ceil(0.8 * mockActionDTO.maxValue));
 
     expect(
       (await service.create(mockActionDTO)).currentValue,
@@ -106,7 +106,7 @@ describe('ActionService', () => {
   it('should reset the current value beetween 80% and 100% of the maximum value', async () => {
     const resetedAction = await service.resetValue(mockAction.id);
     expect(resetedAction.currentValue).toBeGreaterThanOrEqual(
-      0.8 * mockAction.maxValue,
+      Math.ceil(0.8 * mockAction.maxValue),
     );
     expect(resetedAction.currentValue).toBeLessThanOrEqual(mockAction.maxValue);
   });

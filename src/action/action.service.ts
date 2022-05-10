@@ -15,12 +15,17 @@ export class ActionService {
   ) {}
 
   create(createActionDto: CreateActionDto) {
+    const currentValue =
+      Math.floor(
+        Math.random() *
+          (createActionDto.maxValue -
+            Math.ceil(createActionDto.maxValue * 0.8 + 1)),
+      ) + Math.ceil(createActionDto.maxValue * 0.8);
+
     const newAction = {
       name: createActionDto.name,
       maxValue: createActionDto.maxValue,
-      currentValue:
-        (Math.floor(Math.random() * (1 - 0.8 + 1)) + 0.8) *
-        createActionDto.maxValue,
+      currentValue: currentValue,
     };
 
     return this.actionRepository.save(newAction);
@@ -59,9 +64,9 @@ export class ActionService {
     if (action) {
       action.currentValue =
         Math.floor(
-          Math.random() * (action.maxValue - action.maxValue * 0.8 + 1),
-        ) +
-        action.maxValue * 0.8;
+          Math.random() *
+            (action.maxValue - Math.ceil(action.maxValue * 0.8 + 1)),
+        ) + Math.ceil(action.maxValue * 0.8);
 
       return this.actionRepository.save(action);
     }
