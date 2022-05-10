@@ -16,6 +16,14 @@ export class ActionListController {
     return this.actionListService.addAction(+actionId);
   }
 
+  @Delete('/:actionId/:actionIndex')
+  deleteActionAtIndex(
+    @Param('actionId') actionId: string,
+    @Param('actionIndex') actionIndex: string,
+  ) {
+    return this.actionListService.removeActionAtIndex(+actionId, +actionIndex);
+  }
+
   @Get('all')
   findAll() {
     return this.actionListService.findAll();

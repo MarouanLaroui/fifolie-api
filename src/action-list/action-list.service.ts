@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   OnModuleInit,
@@ -10,6 +11,7 @@ import { TasksService } from '../tasks/tasks/tasks.service';
 import { Repository } from 'typeorm';
 import { CreateActionListDto } from './dto/create-action-list.dto';
 import { ActionList } from './entities/action-list.entity';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable()
 export class ActionListService implements OnModuleInit {
@@ -100,6 +102,24 @@ export class ActionListService implements OnModuleInit {
     await this.actionService.useAction(actionToExecute.id);
     /*Reset the timeout*/
     this.tasksService.setActionIn24h(() => this.actionService.resetAllValues());
+  }
+
+  async removeActionAtIndex(id: number, index: number) {
+    const actionList = await this.find();
+    if (index < 0 || index >= actionList.actions.length) {
+      throw new BadRequestException('Index out of bound');
+    }
+    if (!actionList) {
+      throw new NotFoundException("Pas de liste d'action disponibles");
+    }
+    console.log('acion id at index', actionList.actions[index]);
+    console.log('index', index);
+    console.log('id', id);
+    if (actionList.actions[index] != id) {
+      throw new NotFoundException('Action pas trouvée à cet index');
+    }
+    actionList.actions.splice(index, 1);
+    return await this.actionListRepository.save(actionList);
   }
 
   async removeAction(id: number) {
